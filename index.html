@@ -1,277 +1,849 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgeWorld</title>
-    <link rel="stylesheet" href="style.css">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="AgeWorld - Easy Age Calculator, Age Comparison and Profile Manager"
+    >
+
+    <meta
+        name="theme-color"
+        content="#2563eb"
+    >
+
+    <title>AgeWorld - Age Calculator</title>
+
+    <!-- CSS FILE -->
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
-<header>
-    <div class="logo" onclick="showPage('comparison')">
-        ⌛ AgeWorld
-    </div>
 
-    <nav>
-        <button onclick="showPage('comparison')">Age Comparison</button>
-        <button onclick="showPage('calculator')">Age Calculator</button>
-        <button onclick="showPage('upload')">Upload Profile</button>
-        <button onclick="showPage('profiles')">Profiles</button>
-        <button onclick="showPage('saved')">Saved Items</button>
-    </nav>
-</header>
+    <!-- ==================================================
+         HEADER
+    =================================================== -->
 
-<main>
+    <header class="site-header">
 
-<!-- AGE COMPARISON -->
-<section id="comparison" class="page active">
+        <div class="header-content">
 
-    <div class="hero">
-        <p>AGE COMPARISON</p>
-        <h1>Compare Ages</h1>
-        <span>
-            Compare the birth dates of 2 to 100 people.
-        </span>
-    </div>
+            <div class="logo-area">
 
-    <div class="options">
+                <div class="logo-icon">
+                    🌍
+                </div>
 
-        <button class="option active">
-            ⚖️
-            <b>Age Comparison</b>
-            <small>Compare up to 100 people</small>
-        </button>
+                <div>
 
-        <button class="option"
-                onclick="showPage('calculator')">
-            🧮
-            <b>Age Calculator</b>
-            <small>Calculate exact age</small>
-        </button>
+                    <h1>
+                        AgeWorld
+                    </h1>
 
-    </div>
+                    <p>
+                        Easy Age Calculator & Profile Manager
+                    </p>
 
-    <div class="box">
+                </div>
 
-        <h2>How many people?</h2>
-
-        <div class="count">
-            <input
-                type="number"
-                id="personCount"
-                min="2"
-                max="100"
-                value="2">
-
-            <button onclick="createPeople()">
-                Continue
-            </button>
-        </div>
-
-        <div id="peopleForm"></div>
-
-        <div id="comparisonResult"></div>
-
-    </div>
-
-</section>
-
-
-<!-- AGE CALCULATOR -->
-<section id="calculator" class="page">
-
-    <div class="hero">
-        <p>AGE CALCULATOR</p>
-        <h1>Calculate Exact Age</h1>
-        <span>
-            Calculate age in years, months and days.
-        </span>
-    </div>
-
-    <div class="box">
-
-        <label>
-            Date of Birth
-            <input type="date" id="birthDate">
-        </label>
-
-        <label>
-            Calculate Age On
-            <input type="date" id="calculateDate">
-        </label>
-
-        <button class="mainButton"
-                onclick="calculateAge()">
-            Calculate Age
-        </button>
-
-        <div id="ageResult"></div>
-
-    </div>
-
-</section>
-
-
-<!-- UPLOAD PROFILE -->
-<section id="upload" class="page">
-
-    <div class="hero">
-        <p>UPLOAD PROFILE</p>
-        <h1>Upload Age Profile</h1>
-        <span>
-            Add photo, name, birth date and other details.
-        </span>
-    </div>
-
-    <div class="box">
-
-        <label>
-            Photo Source
-
-            <select id="photoSource"
-                    onchange="changePhotoSource()">
-
-                <option value="gallery">
-                    Gallery
-                </option>
-
-                <option value="camera">
-                    Camera
-                </option>
-
-                <option value="web">
-                    Web Image
-                </option>
-
-                <option value="none">
-                    No Photo
-                </option>
-
-            </select>
-        </label>
-
-        <div id="fileBox">
-
-            <label>
-                Select Photo
-
-                <input
-                    type="file"
-                    id="profilePhoto"
-                    accept="image/*"
-                    onchange="previewPhoto()">
-            </label>
+            </div>
 
         </div>
 
-        <div id="webBox" style="display:none;">
+    </header>
 
-            <label>
-                Web Image URL
 
-                <input
-                    type="url"
-                    id="photoURL"
-                    placeholder="https://example.com/photo.jpg"
-                    oninput="previewWebPhoto()">
 
-            </label>
+    <!-- ==================================================
+         NAVIGATION
+    =================================================== -->
 
-        </div>
-
-        <img
-            id="photoPreview"
-            class="preview"
-            style="display:none;">
-
-        <label>
-            Name *
-
-            <input
-                type="text"
-                id="profileName"
-                placeholder="Enter name">
-        </label>
-
-        <label>
-            Birth Date
-
-            <input
-                type="date"
-                id="profileBirth">
-        </label>
-
-        <label>
-            Address
-            <small>(Optional)</small>
-
-            <textarea
-                id="profileAddress"
-                placeholder="Enter address"></textarea>
-        </label>
-
-        <label>
-            Other Details
-            <small>(Optional)</small>
-
-            <textarea
-                id="profileDetails"
-                placeholder="Enter other details"></textarea>
-        </label>
+    <nav class="main-navigation">
 
         <button
-            class="mainButton"
-            onclick="uploadProfile()">
-
-            Upload Profile
-
+            type="button"
+            class="nav-button active"
+            onclick="showPage('comparison')"
+        >
+            👥
+            <span>Age Comparison</span>
         </button>
 
-    </div>
 
-</section>
-
-
-<!-- PROFILES -->
-<section id="profiles" class="page">
-
-    <div class="hero">
-        <p>PROFILES</p>
-        <h1>Uploaded Profiles</h1>
-        <span>
-            Click any profile to see its information.
-        </span>
-    </div>
-
-    <div id="profileGrid"
-         class="profileGrid">
-    </div>
-
-</section>
+        <button
+            type="button"
+            class="nav-button"
+            onclick="showPage('calculator')"
+        >
+            🎂
+            <span>Age Calculator</span>
+        </button>
 
 
-<!-- SAVED ITEMS -->
-<section id="saved" class="page">
+        <button
+            type="button"
+            class="nav-button"
+            onclick="showPage('upload')"
+        >
+            📷
+            <span>Upload Profile</span>
+        </button>
 
-    <div class="hero">
-        <p>SAVED ITEMS</p>
-        <h1>Your Saved Items</h1>
-        <span>
-            Saved calculations, comparisons and profiles.
-        </span>
-    </div>
 
-    <div id="savedItems"></div>
+        <button
+            type="button"
+            class="nav-button"
+            onclick="showPage('profiles')"
+        >
+            👤
+            <span>Profiles</span>
+        </button>
 
-</section>
 
-</main>
+        <button
+            type="button"
+            class="nav-button"
+            onclick="showPage('saved')"
+        >
+            💾
+            <span>Saved Items</span>
+        </button>
 
-<div id="message"></div>
+    </nav>
 
-<script src="script.js"></script>
 
-</body>
-              </html>
+
+    <!-- ==================================================
+         MAIN CONTENT
+    =================================================== -->
+
+    <main class="main-container">
+
+
+
+        <!-- ==================================================
+             AGE COMPARISON PAGE
+        =================================================== -->
+
+        <section
+            id="comparison"
+            class="page active"
+        >
+
+            <div class="page-header">
+
+                <span class="page-icon">
+                    👥
+                </span>
+
+                <div>
+
+                    <h2>
+                        Age Comparison
+                    </h2>
+
+                    <p>
+                        Compare the exact ages of 2 to 100 people.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- NUMBER OF PEOPLE -->
+
+            <div class="form-card">
+
+                <label
+                    for="peopleCount"
+                    class="form-label"
+                >
+                    How many people?
+                </label>
+
+
+                <div class="input-help">
+                    Choose between 2 and 100 people.
+                </div>
+
+
+                <div class="number-control">
+
+                    <button
+                        type="button"
+                        onclick="changePeopleCount(-1)"
+                        class="small-control-button"
+                    >
+                        −
+                    </button>
+
+
+                    <input
+                        type="number"
+                        id="peopleCount"
+                        min="2"
+                        max="100"
+                        value="2"
+                        inputmode="numeric"
+                    >
+
+
+                    <button
+                        type="button"
+                        onclick="changePeopleCount(1)"
+                        class="small-control-button"
+                    >
+                        +
+                    </button>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="primary-button full-button"
+                    onclick="createPeopleInputs()"
+                >
+                    ➕ Add People
+                </button>
+
+            </div>
+
+
+
+            <!-- PEOPLE INPUTS -->
+
+            <div
+                id="peopleInputs"
+                class="people-container"
+            >
+
+                <!-- JavaScript will create people here -->
+
+            </div>
+
+
+
+            <!-- COMPARISON BUTTON -->
+
+            <button
+                type="button"
+                class="primary-button large-button"
+                onclick="compareAges()"
+            >
+                🔍 Compare Ages
+            </button>
+
+
+
+            <!-- RESULT -->
+
+            <div
+                id="comparisonResult"
+                class="result-container"
+            >
+
+            </div>
+
+
+
+            <!-- ACTION BUTTONS -->
+
+            <div class="action-buttons">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="resetComparison()"
+                >
+                    🔄 Restart
+                </button>
+
+
+                <button
+                    type="button"
+                    class="success-button"
+                    onclick="saveComparison()"
+                >
+                    💾 Save Comparison
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             AGE CALCULATOR PAGE
+        =================================================== -->
+
+        <section
+            id="calculator"
+            class="page"
+        >
+
+            <div class="page-header">
+
+                <span class="page-icon">
+                    🎂
+                </span>
+
+                <div>
+
+                    <h2>
+                        Age Calculator
+                    </h2>
+
+                    <p>
+                        Calculate your exact age easily.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- DOB CARD -->
+
+            <div class="form-card">
+
+                <h3 class="card-title">
+                    📅 Date of Birth
+                </h3>
+
+
+                <p class="card-description">
+                    Enter your birth date using the easy selectors below.
+                </p>
+
+
+
+                <div class="date-selector">
+
+                    <!-- DAY -->
+
+                    <div class="date-field">
+
+                        <label
+                            for="dobDay"
+                            class="form-label"
+                        >
+                            Day
+                        </label>
+
+                        <select
+                            id="dobDay"
+                            class="date-select"
+                        >
+
+                            <option value="">
+                                Day
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- MONTH -->
+
+                    <div class="date-field">
+
+                        <label
+                            for="dobMonth"
+                            class="form-label"
+                        >
+                            Month
+                        </label>
+
+                        <select
+                            id="dobMonth"
+                            class="date-select"
+                        >
+
+                            <option value="">
+                                Month
+                            </option>
+
+                            <option value="1">
+                                January
+                            </option>
+
+                            <option value="2">
+                                February
+                            </option>
+
+                            <option value="3">
+                                March
+                            </option>
+
+                            <option value="4">
+                                April
+                            </option>
+
+                            <option value="5">
+                                May
+                            </option>
+
+                            <option value="6">
+                                June
+                            </option>
+
+                            <option value="7">
+                                July
+                            </option>
+
+                            <option value="8">
+                                August
+                            </option>
+
+                            <option value="9">
+                                September
+                            </option>
+
+                            <option value="10">
+                                October
+                            </option>
+
+                            <option value="11">
+                                November
+                            </option>
+
+                            <option value="12">
+                                December
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- YEAR -->
+
+                    <div class="date-field">
+
+                        <label
+                            for="dobYear"
+                            class="form-label"
+                        >
+                            Year
+                        </label>
+
+                        <select
+                            id="dobYear"
+                            class="date-select"
+                        >
+
+                            <option value="">
+                                Year
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- QUICK DOB -->
+
+                <div class="quick-date-area">
+
+                    <button
+                        type="button"
+                        class="small-button"
+                        onclick="setTodayAsDOB()"
+                    >
+                        📅 Today
+                    </button>
+
+                    <button
+                        type="button"
+                        class="small-button"
+                        onclick="clearDOB()"
+                    >
+                        ✖ Clear
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CALCULATION DATE -->
+
+            <div class="form-card">
+
+                <h3 class="card-title">
+                    📆 Calculate Age On
+                </h3>
+
+
+                <p class="card-description">
+                    Choose the date on which you want to know the age.
+                </p>
+
+
+
+                <div class="date-selector">
+
+                    <!-- DAY -->
+
+                    <div class="date-field">
+
+                        <label
+                            for="calcDay"
+                            class="form-label"
+                        >
+                            Day
+                        </label>
+
+                        <select
+                            id="calcDay"
+                            class="date-select"
+                        >
+
+                            <option value="">
+                                Day
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- MONTH -->
+
+                    <div class="date-field">
+
+                        <label
+                            for="calcMonth"
+                            class="form-label"
+                        >
+                            Month
+                        </label>
+
+                        <select
+                            id="calcMonth"
+                            class="date-select"
+                        >
+
+                            <option value="">
+                                Month
+                            </option>
+
+                            <option value="1">
+                                January
+                            </option>
+
+                            <option value="2">
+                                February
+                            </option>
+
+                            <option value="3">
+                                March
+                            </option>
+
+                            <option value="4">
+                                April
+                            </option>
+
+                            <option value="5">
+                                May
+                            </option>
+
+                            <option value="6">
+                                June
+                            </option>
+
+                            <option value="7">
+                                July
+                            </option>
+
+                            <option value="8">
+                                August
+                            </option>
+
+                            <option value="9">
+                                September
+                            </option>
+
+                            <option value="10">
+                                October
+                            </option>
+
+                            <option value="11">
+                                November
+                            </option>
+
+                            <option value="12">
+                                December
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- YEAR -->
+
+                    <div class="date-field">
+
+                        <label
+                            for="calcYear"
+                            class="form-label"
+                        >
+                            Year
+                        </label>
+
+                        <select
+                            id="calcYear"
+                            class="date-select"
+                        >
+
+                            <option value="">
+                                Year
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <button
+                    type="button"
+                    class="today-button"
+                    onclick="setCalculationDateToday()"
+                >
+                    📅 Use Today's Date
+                </button>
+
+            </div>
+
+
+
+            <!-- CALCULATE -->
+
+            <button
+                type="button"
+                class="primary-button large-button"
+                onclick="calculateAge()"
+            >
+                🧮 Calculate Exact Age
+            </button>
+
+
+
+            <!-- AGE RESULT -->
+
+            <div
+                id="ageResult"
+                class="result-container"
+            >
+
+            </div>
+
+
+
+            <!-- CALCULATOR ACTIONS -->
+
+            <div class="action-buttons">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    onclick="calculateNext()"
+                >
+                    ➡️ Next
+                </button>
+
+
+                <button
+                    type="button"
+                    class="success-button"
+                    onclick="saveAgeCalculation()"
+                >
+                    💾 Save
+                </button>
+
+
+                <button
+                    type="button"
+                    class="upload-button"
+                    onclick="goToUpload()"
+                >
+                    📷 Upload Profile
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             UPLOAD PROFILE PAGE
+        =================================================== -->
+
+        <section
+            id="upload"
+            class="page"
+        >
+
+            <div class="page-header">
+
+                <span class="page-icon">
+                    📷
+                </span>
+
+                <div>
+
+                    <h2>
+                        Upload Profile
+                    </h2>
+
+                    <p>
+                        Create and save a profile.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="form-card">
+
+                <!-- NAME -->
+
+                <label
+                    for="profileName"
+                    class="form-label"
+                >
+                    Name *
+                </label>
+
+                <input
+                    type="text"
+                    id="profileName"
+                    class="text-input"
+                    placeholder="Enter person's name"
+                    autocomplete="name"
+                >
+
+
+
+                <!-- DOB -->
+
+                <h3 class="card-title profile-date-title">
+                    🎂 Date of Birth
+                </h3>
+
+
+                <div class="date-selector">
+
+                    <div class="date-field">
+
+                        <label
+                            for="profileDobDay"
+                            class="form-label"
+                        >
+                            Day
+                        </label>
+
+                        <select
+                            id="profileDobDay"
+                            class="date-select"
+                        >
+
+                            <option value="">
+                                Day
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="date-field">
+
+                        <label
+                            for="profileDobMonth"
+                            class="form-label"
+                        >
+                            Month
+                        </label>
+
+                        <select
+                            id="profileDobMonth"
+                            class="date-select"
+                        >
+
+                            <option value="">
+                                Month
+                            </option>
+
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="date-field">
+
+                        <label
+                            for="profileDobYear"
+                            class="form-label"
+                        >
+                            Year
+                        </label>
+
+                        <select
+                            id="profileDobYear"
+                            class="date-select"
+                        >
+
+                            <option value="">
+                                Year
+                            </option>
+
+    
