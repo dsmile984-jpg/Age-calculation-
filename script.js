@@ -1,5 +1,5 @@
 // ===============================
-// AGEWORLD - JAVASCRIPT
+// AGEWORLD - COMPLETE JAVASCRIPT
 // ===============================
 
 let lastComparison = null;
@@ -11,7 +11,7 @@ let lastAgeCalculation = null;
 // ===============================
 
 function showPage(pageId) {
-    document.querySelectorAll(".page").forEach(page => {
+    document.querySelectorAll(".page").forEach(function(page) {
         page.classList.remove("active");
     });
 
@@ -41,7 +41,6 @@ function showPage(pageId) {
 // ===============================
 
 function createPeopleInputs() {
-
     const count = parseInt(
         document.getElementById("peopleCount").value
     );
@@ -56,14 +55,15 @@ function createPeopleInputs() {
     }
 
     for (let i = 1; i <= count; i++) {
-
         const box = document.createElement("div");
+
         box.className = "person-box";
 
         box.innerHTML = `
             <h3>Person ${i}</h3>
 
             <label>Name (Optional)</label>
+
             <input
                 type="text"
                 id="personName${i}"
@@ -71,6 +71,7 @@ function createPeopleInputs() {
             >
 
             <label>Date of Birth *</label>
+
             <input
                 type="date"
                 id="personDob${i}"
@@ -83,7 +84,6 @@ function createPeopleInputs() {
 
 
 function compareAges() {
-
     const boxes = document.querySelectorAll(".person-box");
 
     if (boxes.length < 2) {
@@ -91,12 +91,14 @@ function compareAges() {
         return;
     }
 
-    let people = [];
+    const people = [];
 
     for (let i = 1; i <= boxes.length; i++) {
+        const nameInput =
+            document.getElementById("personName" + i);
 
-        const nameInput = document.getElementById("personName" + i);
-        const dobInput = document.getElementById("personDob" + i);
+        const dobInput =
+            document.getElementById("personDob" + i);
 
         const name =
             nameInput.value.trim() || `Person ${i}`;
@@ -108,50 +110,70 @@ function compareAges() {
             return;
         }
 
+        const date = new Date(dob + "T00:00:00");
+
+        if (isNaN(date.getTime())) {
+            alert(`Invalid DOB for ${name}.`);
+            return;
+        }
+
         people.push({
             name: name,
             dob: dob,
-            date: new Date(dob + "T00:00:00")
+            date: date
         });
     }
 
-    people.sort((a, b) => a.date - b.date);
+    people.sort(function(a, b) {
+        return a.date - b.date;
+    });
 
     let html = `
         <div class="result-box">
             <h3>Age Comparison Result</h3>
+
+            <p>
+                <strong>Oldest:</strong>
+                ${escapeHTML(people[0].name)}
+            </p>
+
+            <p>
+                <strong>Youngest:</strong>
+                ${escapeHTML(people[people.length - 1].name)}
+            </p>
+
+            <h3 style="margin-top:15px;">
+                People Order
+            </h3>
     `;
 
-    html += `<p><strong>Oldest:</strong> ${escapeHTML(people[0].name)}</p>`;
-    html += `<p><strong>Youngest:</strong> ${escapeHTML(people[people.length - 1].name)}</p>`;
-
-    html += `<h3 style="margin-top:15px;">People Order</h3>`;
-
-    people.forEach((person, index) => {
-
+    people.forEach(function(person, index) {
         html += `
             <p>
-                ${index + 1}. 
+                ${index + 1}.
                 <strong>${escapeHTML(person.name)}</strong>
                 — ${formatDate(person.dob)}
             </p>
         `;
     });
 
-    html += `<h3 style="margin-top:15px;">Age Differences</h3>`;
+    html += `
+        <h3 style="margin-top:15px;">
+            Age Differences
+        </h3>
+    `;
 
     for (let i = 0; i < people.length - 1; i++) {
-
         const older = people[i];
         const younger = people[i + 1];
 
-        const difference = Math.abs(
-            daysBetween(older.date, younger.date)
-        );
+        const difference =
+            daysBetween(older.date, younger.date);
 
         html += `
             <p>
-                ${escapeHTML(older.name)} is
+                ${escapeHTML(older.name)}
+                is
                 <strong>${difference} days</strong>
                 older than
                 ${escapeHTML(younger.name)}.
@@ -159,27 +181,41 @@ function compareAges() {
         `;
     }
 
-    html += `</div>`;
+    html += `
+        </div>
+    `;
 
-    document.getElementById("comparisonResult").innerHTML = html;
+    document.getElementById(
+        "comparisonResult"
+    ).innerHTML = html;
 
     lastComparison = {
-        people: people.map(person => ({
-            name: person.name,
-            dob: person.dob
-        })),
+        people: people.map(function(person) {
+            return {
+                name: person.name,
+                dob: person.dob
+            };
+        }),
+
         createdAt: new Date().toLocaleString()
     };
 }
 
 
 function resetComparison() {
-
     document.getElementById("peopleCount").value = 2;
-    document.getElementById("peopleInputs").innerHTML = "";
-    document.getElementById("comparisonResult").innerHTML = "";
+
+    document.getElementById(
+        "peopleInputs"
+    ).innerHTML = "";
+
+    document.getElementById(
+        "comparisonResult"
+    ).innerHTML = "";
 
     lastComparison = null;
+
+    createPeopleInputs();
 }
 
 
@@ -188,8 +224,9 @@ function resetComparison() {
 // ===============================
 
 function calculateAge() {
+    const dobValue =
+        document.getElementById("dob").value;
 
-    const dobValue = document.getElementById("dob").value;
     const calculateValue =
         document.getElementById("calculateDate").value;
 
@@ -204,12 +241,22 @@ function calculateAge() {
     const targetDate =
         new Date(calculateValue + "T00:00:00");
 
-    if (birthDate > targetDate) {
-        alert("Date of birth cannot be after calculation date.");
+    if (isNaN(birthDate.getTime()) ||
+        isNaN(targetDate.getTime())) {
+
+        alert("Invalid date.");
         return;
     }
 
-    const age = getExactAge(birthDate, targetDate);
+    if (birthDate > targetDate) {
+        alert(
+            "Date of birth cannot be after calculation date."
+        );
+        return;
+    }
+
+    const age =
+        getExactAge(birthDate, targetDate);
 
     const totalDays =
         Math.floor(
@@ -219,6 +266,7 @@ function calculateAge() {
 
     document.getElementById("ageResult").innerHTML = `
         <div class="result-box">
+
             <h3>Exact Age</h3>
 
             <p>
@@ -229,15 +277,19 @@ function calculateAge() {
                 </strong>
             </p>
 
-            <p>Total days: ${totalDays}</p>
+            <p>
+                Total days: ${totalDays}
+            </p>
 
             <p>
                 DOB: ${formatDate(dobValue)}
             </p>
 
             <p>
-                Calculated on: ${formatDate(calculateValue)}
+                Calculated on:
+                ${formatDate(calculateValue)}
             </p>
+
         </div>
     `;
 
@@ -254,7 +306,6 @@ function calculateAge() {
 
 
 function getExactAge(birthDate, targetDate) {
-
     let years =
         targetDate.getFullYear() -
         birthDate.getFullYear();
@@ -268,7 +319,6 @@ function getExactAge(birthDate, targetDate) {
         birthDate.getDate();
 
     if (days < 0) {
-
         months--;
 
         const previousMonth =
@@ -295,10 +345,15 @@ function getExactAge(birthDate, targetDate) {
 
 
 function calculateNext() {
-
     document.getElementById("dob").value = "";
-    document.getElementById("calculateDate").value = "";
-    document.getElementById("ageResult").innerHTML = "";
+
+    document.getElementById(
+        "calculateDate"
+    ).value = getToday();
+
+    document.getElementById(
+        "ageResult"
+    ).innerHTML = "";
 
     lastAgeCalculation = null;
 }
@@ -309,7 +364,6 @@ function calculateNext() {
 // ===============================
 
 function changePhotoType() {
-
     const type =
         document.getElementById("photoType").value;
 
@@ -345,7 +399,6 @@ function changePhotoType() {
 // ===============================
 
 function uploadProfile() {
-
     const name =
         document.getElementById("profileName").value.trim();
 
@@ -364,7 +417,6 @@ function uploadProfile() {
     }
 
     if (type === "url") {
-
         const url =
             document.getElementById("photoUrl").value.trim();
 
@@ -373,13 +425,7 @@ function uploadProfile() {
             return;
         }
 
-        saveProfile(
-            name,
-            dob,
-            address,
-            url
-        );
-
+        saveProfile(name, dob, address, url);
         return;
     }
 
@@ -393,7 +439,9 @@ function uploadProfile() {
             document.getElementById("cameraPhoto");
     }
 
-    if (!fileInput.files || !fileInput.files[0]) {
+    if (!fileInput.files ||
+        !fileInput.files[0]) {
+
         alert("Please select a photo.");
         return;
     }
@@ -403,7 +451,6 @@ function uploadProfile() {
     const reader = new FileReader();
 
     reader.onload = function(event) {
-
         saveProfile(
             name,
             dob,
@@ -420,16 +467,12 @@ function uploadProfile() {
 // SAVE PROFILE
 // ===============================
 
-function saveProfile(
-    name,
-    dob,
-    address,
-    photo
-) {
-
+function saveProfile(name, dob, address, photo) {
     const profiles =
         JSON.parse(
-            localStorage.getItem("ageworldProfiles") || "[]"
+            localStorage.getItem(
+                "ageworldProfiles"
+            ) || "[]"
         );
 
     const profile = {
@@ -448,18 +491,39 @@ function saveProfile(
         JSON.stringify(profiles)
     );
 
-    document.getElementById("profileName").value = "";
-    document.getElementById("profileDob").value = "";
-    document.getElementById("profileAddress").value = "";
-    document.getElementById("photoUrl").value = "";
+    document.getElementById(
+        "profileName"
+    ).value = "";
 
-    document.getElementById("galleryPhoto").value = "";
-    document.getElementById("cameraPhoto").value = "";
+    document.getElementById(
+        "profileDob"
+    ).value = "";
 
-    document.getElementById("uploadMessage").innerHTML = `
+    document.getElementById(
+        "profileAddress"
+    ).value = "";
+
+    document.getElementById(
+        "photoUrl"
+    ).value = "";
+
+    document.getElementById(
+        "galleryPhoto"
+    ).value = "";
+
+    document.getElementById(
+        "cameraPhoto"
+    ).value = "";
+
+    document.getElementById(
+        "uploadMessage"
+    ).innerHTML = `
         <div class="result-box">
             <h3>✅ Profile Uploaded</h3>
-            <p>${escapeHTML(name)} has been saved successfully.</p>
+            <p>
+                ${escapeHTML(name)}
+                has been saved successfully.
+            </p>
         </div>
     `;
 
@@ -472,17 +536,21 @@ function saveProfile(
 // ===============================
 
 function displayProfiles() {
-
     const container =
         document.getElementById("profilesList");
 
+    if (!container) {
+        return;
+    }
+
     const profiles =
         JSON.parse(
-            localStorage.getItem("ageworldProfiles") || "[]"
+            localStorage.getItem(
+                "ageworldProfiles"
+            ) || "[]"
         );
 
     if (profiles.length === 0) {
-
         container.innerHTML = `
             <div class="empty">
                 No profiles uploaded yet.
@@ -494,8 +562,7 @@ function displayProfiles() {
 
     container.innerHTML = "";
 
-    profiles.forEach(profile => {
-
+    profiles.forEach(function(profile) {
         const card =
             document.createElement("div");
 
@@ -512,19 +579,28 @@ function displayProfiles() {
             >
 
             <div class="profile-info">
-                <h3>${escapeHTML(profile.name)}</h3>
+
+                <h3>
+                    ${escapeHTML(profile.name)}
+                </h3>
 
                 ${
                     profile.dob
-                    ? `<p>DOB: ${formatDate(profile.dob)}</p>`
+                    ? `<p>
+                        DOB:
+                        ${formatDate(profile.dob)}
+                       </p>`
                     : ""
                 }
 
                 ${
                     profile.address
-                    ? `<p>${escapeHTML(profile.address)}</p>`
+                    ? `<p>
+                        ${escapeHTML(profile.address)}
+                       </p>`
                     : ""
                 }
+
             </div>
         `;
 
@@ -538,14 +614,17 @@ function displayProfiles() {
 // ===============================
 
 function showProfileDetails(id) {
-
     const profiles =
         JSON.parse(
-            localStorage.getItem("ageworldProfiles") || "[]"
+            localStorage.getItem(
+                "ageworldProfiles"
+            ) || "[]"
         );
 
     const profile =
-        profiles.find(item => item.id === id);
+        profiles.find(function(item) {
+            return item.id === id;
+        });
 
     if (!profile) {
         alert("Profile not found.");
@@ -577,7 +656,6 @@ function showProfileDetails(id) {
 // ===============================
 
 function saveAgeCalculation() {
-
     if (!lastAgeCalculation) {
         alert("First calculate an age.");
         return;
@@ -585,7 +663,9 @@ function saveAgeCalculation() {
 
     const saved =
         JSON.parse(
-            localStorage.getItem("ageworldSaved") || "[]"
+            localStorage.getItem(
+                "ageworldSaved"
+            ) || "[]"
         );
 
     saved.push({
@@ -599,7 +679,9 @@ function saveAgeCalculation() {
         JSON.stringify(saved)
     );
 
-    alert("Age calculation saved successfully.");
+    alert(
+        "Age calculation saved successfully."
+    );
 }
 
 
@@ -608,7 +690,6 @@ function saveAgeCalculation() {
 // ===============================
 
 function saveComparison() {
-
     if (!lastComparison) {
         alert("First compare the ages.");
         return;
@@ -616,7 +697,9 @@ function saveComparison() {
 
     const saved =
         JSON.parse(
-            localStorage.getItem("ageworldSaved") || "[]"
+            localStorage.getItem(
+                "ageworldSaved"
+            ) || "[]"
         );
 
     saved.push({
@@ -630,7 +713,9 @@ function saveComparison() {
         JSON.stringify(saved)
     );
 
-    alert("Age comparison saved successfully.");
+    alert(
+        "Age comparison saved successfully."
+    );
 }
 
 
@@ -639,21 +724,29 @@ function saveComparison() {
 // ===============================
 
 function displaySavedItems() {
-
     const container =
         document.getElementById("savedList");
 
+    if (!container) {
+        return;
+    }
+
     const saved =
         JSON.parse(
-            localStorage.getItem("ageworldSaved") || "[]"
+            localStorage.getItem(
+                "ageworldSaved"
+            ) || "[]"
         );
 
     const profiles =
         JSON.parse(
-            localStorage.getItem("ageworldProfiles") || "[]"
+            localStorage.getItem(
+                "ageworldProfiles"
+            ) || "[]"
         );
 
-    if (saved.length === 0 && profiles.length === 0) {
+    if (saved.length === 0 &&
+        profiles.length === 0) {
 
         container.innerHTML = `
             <div class="empty">
@@ -666,15 +759,14 @@ function displaySavedItems() {
 
     container.innerHTML = "";
 
-    saved.forEach(item => {
-
+    // Saved calculations/comparisons
+    saved.forEach(function(item) {
         const card =
             document.createElement("div");
 
         card.className = "saved-card";
 
         if (item.type === "Age Calculation") {
-
             const d = item.data;
 
             card.innerHTML = `
@@ -709,7 +801,6 @@ function displaySavedItems() {
         }
 
         if (item.type === "Age Comparison") {
-
             const d = item.data;
 
             card.innerHTML = `
@@ -720,13 +811,15 @@ function displaySavedItems() {
                     ${d.people.length}
                 </p>
 
-                ${d.people.map(person => `
-                    <p>
-                        ${escapeHTML(person.name)}
-                        —
-                        ${formatDate(person.dob)}
-                    </p>
-                `).join("")}
+                ${d.people.map(function(person) {
+                    return `
+                        <p>
+                            ${escapeHTML(person.name)}
+                            —
+                            ${formatDate(person.dob)}
+                        </p>
+                    `;
+                }).join("")}
 
                 <button
                     class="delete-btn"
@@ -742,8 +835,7 @@ function displaySavedItems() {
 
 
     // Saved profiles
-    profiles.forEach(profile => {
-
+    profiles.forEach(function(profile) {
         const card =
             document.createElement("div");
 
@@ -760,13 +852,19 @@ function displaySavedItems() {
 
             ${
                 profile.dob
-                ? `<p>DOB: ${formatDate(profile.dob)}</p>`
+                ? `<p>
+                    DOB:
+                    ${formatDate(profile.dob)}
+                   </p>`
                 : ""
             }
 
             ${
                 profile.address
-                ? `<p>Address: ${escapeHTML(profile.address)}</p>`
+                ? `<p>
+                    Address:
+                    ${escapeHTML(profile.address)}
+                   </p>`
                 : ""
             }
 
@@ -788,14 +886,17 @@ function displaySavedItems() {
 // ===============================
 
 function deleteSaved(id) {
-
     let saved =
         JSON.parse(
-            localStorage.getItem("ageworldSaved") || "[]"
+            localStorage.getItem(
+                "ageworldSaved"
+            ) || "[]"
         );
 
     saved =
-        saved.filter(item => item.id !== id);
+        saved.filter(function(item) {
+            return item.id !== id;
+        });
 
     localStorage.setItem(
         "ageworldSaved",
@@ -811,14 +912,17 @@ function deleteSaved(id) {
 // ===============================
 
 function deleteProfile(id) {
-
     let profiles =
         JSON.parse(
-            localStorage.getItem("ageworldProfiles") || "[]"
+            localStorage.getItem(
+                "ageworldProfiles"
+            ) || "[]"
         );
 
     profiles =
-        profiles.filter(profile => profile.id !== id);
+        profiles.filter(function(profile) {
+            return profile.id !== id;
+        });
 
     localStorage.setItem(
         "ageworldProfiles",
@@ -835,19 +939,22 @@ function deleteProfile(id) {
 // ===============================
 
 function clearSaved() {
-
-    if (!confirm("Delete all saved calculations and comparisons?")) {
+    if (!confirm(
+        "Delete all saved calculations and comparisons?"
+    )) {
         return;
     }
 
-    localStorage.removeItem("ageworldSaved");
+    localStorage.removeItem(
+        "ageworldSaved"
+    );
 
     displaySavedItems();
 }
 
 
 // ===============================
-// UPLOAD BUTTON FROM CALCULATOR
+// UPLOAD BUTTON
 // ===============================
 
 function goToUpload() {
@@ -859,78 +966,18 @@ function goToUpload() {
 // DATE HELPERS
 // ===============================
 
-function formatDate(dateString) {
+function getToday() {
+    const now = new Date();
 
-    if (!dateString) {
-        return "";
-    }
+    const year =
+        now.getFullYear();
 
-    const parts =
-        dateString.split("-");
+    const month =
+        String(now.getMonth() + 1)
+        .padStart(2, "0");
 
-    if (parts.length !== 3) {
-        return dateString;
-    }
+    const day =
+        String(now.getDate())
+        .padStart(2, "0");
 
-    return `${parts[2]}-${parts[1]}-${parts[0]}`;
-}
-
-
-function daysBetween(date1, date2) {
-
-    const oneDay =
-        1000 * 60 * 60 * 24;
-
-    return Math.round(
-        Math.abs(date2 - date1) / oneDay
-    );
-}
-
-
-// ===============================
-// SECURITY HELPERS
-// ===============================
-
-function escapeHTML(text) {
-
-    return String(text)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-
-function escapeAttribute(text) {
-
-    return String(text)
-        .replace(/&/g, "&amp;")
-        .replace(/"/g, "&quot;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-}
-
-
-// ===============================
-// STARTUP
-// ===============================
-
-document.addEventListener("DOMContentLoaded", function() {
-
-    const today =
-        new Date().toISOString().split("T")[0];
-
-    const calculateDate =
-        document.getElementById("calculateDate");
-
-    if (calculateDate) {
-        calculateDate.value = today;
-    }
-
-    createPeopleInputs();
-
-    displayProfiles();
-    displaySavedItems();
-
-});
+    return `$
