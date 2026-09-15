@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgeWorld</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="logo" onclick="showPage('comparison')">
+        ⌛ AgeWorld
+    </div>
+
+    <nav>
+        <button onclick="showPage('comparison')">Age Comparison</button>
+        <button onclick="showPage('calculator')">Age Calculator</button>
+        <button onclick="showPage('upload')">Upload Profile</button>
+        <button onclick="showPage('profiles')">Profiles</button>
+        <button onclick="showPage('saved')">Saved Items</button>
+    </nav>
+</header>
+
+<main>
+
+<!-- AGE COMPARISON -->
+<section id="comparison" class="page active">
+
+    <div class="hero">
+        <p>AGE COMPARISON</p>
+        <h1>Compare Ages</h1>
+        <span>
+            Compare the birth dates of 2 to 100 people.
+        </span>
+    </div>
+
+    <div class="options">
+
+        <button class="option active">
+            ⚖️
+            <b>Age Comparison</b>
+            <small>Compare up to 100 people</small>
+        </button>
+
+        <button class="option"
+                onclick="showPage('calculator')">
+            🧮
+            <b>Age Calculator</b>
+            <small>Calculate exact age</small>
+        </button>
+
+    </div>
+
+    <div class="box">
+
+        <h2>How many people?</h2>
+
+        <div class="count">
+            <input
+                type="number"
+                id="personCount"
+                min="2"
+                max="100"
+                value="2">
+
+            <button onclick="createPeople()">
+                Continue
+            </button>
+        </div>
+
+        <div id="peopleForm"></div>
+
+        <div id="comparisonResult"></div>
+
+    </div>
+
+</section>
+
+
+<!-- AGE CALCULATOR -->
+<section id="calculator" class="page">
+
+    <div class="hero">
+        <p>AGE CALCULATOR</p>
+        <h1>Calculate Exact Age</h1>
+        <span>
+            Calculate age in years, months and days.
+        </span>
+    </div>
+
+    <div class="box">
+
+        <label>
+            Date of Birth
+            <input type="date" id="birthDate">
+        </label>
+
+        <label>
+            Calculate Age On
+            <input type="date" id="calculateDate">
+        </label>
+
+        <button class="mainButton"
+                onclick="calculateAge()">
+            Calculate Age
+        </button>
+
+        <div id="ageResult"></div>
+
+    </div>
+
+</section>
+
+
+<!-- UPLOAD PROFILE -->
+<section id="upload" class="page">
+
+    <div class="hero">
+        <p>UPLOAD PROFILE</p>
+        <h1>Upload Age Profile</h1>
+        <span>
+            Add photo, name, birth date and other details.
+        </span>
+    </div>
+
+    <div class="box">
+
+        <label>
+            Photo Source
+
+            <select id="photoSource"
+                    onchange="changePhotoSource()">
+
+                <option value="gallery">
+                    Gallery
+                </option>
+
+                <option value="camera">
+                    Camera
+                </option>
+
+                <option value="web">
+                    Web Image
+                </option>
+
+                <option value="none">
+                    No Photo
+                </option>
+
+            </select>
+        </label>
+
+        <div id="fileBox">
+
+            <label>
+                Select Photo
+
+                <input
+                    type="file"
+                    id="profilePhoto"
+                    accept="image/*"
+                    onchange="previewPhoto()">
+            </label>
+
+        </div>
+
+        <div id="webBox" style="display:none;">
+
+            <label>
+                Web Image URL
+
+                <input
+                    type="url"
+                    id="photoURL"
+                    placeholder="https://example.com/photo.jpg"
+                    oninput="previewWebPhoto()">
+
+            </label>
+
+        </div>
+
+        <img
+            id="photoPreview"
+            class="preview"
+            style="display:none;">
+
+        <label>
+            Name *
+
+            <input
+                type="text"
+                id="profileName"
+                placeholder="Enter name">
+        </label>
+
+        <label>
+            Birth Date
+
+            <input
+                type="date"
+                id="profileBirth">
+        </label>
+
+        <label>
+            Address
+            <small>(Optional)</small>
+
+            <textarea
+                id="profileAddress"
+                placeholder="Enter address"></textarea>
+        </label>
+
+        <label>
+            Other Details
+            <small>(Optional)</small>
+
+            <textarea
+                id="profileDetails"
+                placeholder="Enter other details"></textarea>
+        </label>
+
+        <button
+            class="mainButton"
+            onclick="uploadProfile()">
+
+            Upload Profile
+
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- PROFILES -->
+<section id="profiles" class="page">
+
+    <div class="hero">
+        <p>PROFILES</p>
+        <h1>Uploaded Profiles</h1>
+        <span>
+            Click any profile to see its information.
+        </span>
+    </div>
+
+    <div id="profileGrid"
+         class="profileGrid">
+    </div>
+
+</section>
+
+
+<!-- SAVED ITEMS -->
+<section id="saved" class="page">
+
+    <div class="hero">
+        <p>SAVED ITEMS</p>
+        <h1>Your Saved Items</h1>
+        <span>
+            Saved calculations, comparisons and profiles.
+        </span>
+    </div>
+
+    <div id="savedItems"></div>
+
+</section>
+
+</main>
+
+<div id="message"></div>
+
+<script src="script.js"></script>
+
+</body>
+              </html>
